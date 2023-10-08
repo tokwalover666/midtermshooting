@@ -35,16 +35,7 @@ public class SpawnEnemy : MonoBehaviour
     {
         GameObject Enemy = Instantiate(enemy, EnemySpawnPoint.position, EnemySpawnPoint.rotation);
 
-   
-/*        Renderer enemyRenderer = enemy.GetComponent<Renderer>();
 
-        Color[] availableColors = ColorManager.availableColors;
-        int randomColorIndex = Random.Range(0, availableColors.Length);
-        Color randomColor = availableColors[randomColorIndex];
-
-        Renderer rend = enemy.GetComponent<Renderer>();
-        enemyRenderer.material.color = Color.red;
-*/
     }
 
 

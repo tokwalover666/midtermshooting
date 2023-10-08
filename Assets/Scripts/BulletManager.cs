@@ -4,49 +4,56 @@ using UnityEngine;
 
 public class BulletManager : MonoBehaviour
 {
-    public Rigidbody rigidBody;
-    public MeshRenderer meshRenderer;
+
     private Renderer rend;
+    private Material playerColor;
+    public MeshRenderer meshRenderer;
 
     // Start is called before the first frame update
     void Start()
-    {
+    {               //color bullet
         rend = GetComponent<Renderer>();
 
         var player = GameObject.FindGameObjectWithTag("Player");
         var colorManager = player.GetComponent<ColorManager>();
-        var currentColor = colorManager.color[colorManager.CurrentColor];
+        //var currentColor = colorManager.color[colorManager.CurrentColor];
 
-        rend.material = currentColor;
+        playerColor = colorManager.GetCurrentColorMaterial();
+
+
+
+        rend.material = playerColor;
+
     }
 
-
-
-    private void OnTriggerEnter(Collider collision)
+/*    private void OnTriggerEnter(Collider collision)
     {
-        if (collision.CompareTag("bullet"))
+        if (collision.CompareTag("enemy"))
         {
-            EnemyColorManager enemyColorManager = collision.GetComponent<EnemyColorManager>();
 
-            if (enemyColorManager != null)
+            Renderer enemyRenderer = collision.GetComponent<Renderer>();
+            Debug.Log("Enemy Material: " + enemyRenderer.material.name);
+            Debug.Log("Bullet Material: " + playerColor.name);
+            if (enemyRenderer != null)
             {
-                Color enemyColor = enemyColorManager.GetCurrentColor();
+                Material enemyMaterial = enemyRenderer.material;
 
-                // Compare the colors of the bullet and enemy
-                if (rend.material.color.Equals(enemyColor))
+                Debug.Log("22222Enemy Material: " + enemyRenderer.material.name);
+                Debug.Log("22222222222Bullet Material: " + playerColor.name);
+                if (enemyMaterial == playerColor)
                 {
-                    Debug.Log("correct color");
                     Destroy(collision.gameObject);
-                    Destroy(gameObject); // Destroy the bullet
-                }
-                else
-                {
-                    Debug.Log("wrong color");
-                    Destroy(gameObject); // Destroy only the bullet
+                    Debug.Log("Enemy Destroyed");
                 }
             }
         }
-    }
+
+        Destroy(gameObject);
+        Debug.Log("BOULET Destroyed");
+    }*/
+
+
+
 
     // Update is called once per frame
 

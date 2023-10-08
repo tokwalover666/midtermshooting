@@ -5,26 +5,35 @@ using UnityEngine.UIElements;
 
 public class EmenyHandler : MonoBehaviour
 {
-    public Transform pointA;
-    public Transform pointB;
-    public float walkspeed = 2.0f;
+
+    public float walkspeed = 0.10f;
+    public float RotationSpeed = 0.1f ;
+
 
     public Transform TargetPlayer;
-    public float RotationSpeed = .01f;
+
     Quaternion rotate;
     Vector3 direction;
 
+    public Rigidbody rigidBody;
+    public Renderer rend;
+    public MeshRenderer meshRenderer;
 
-    private Transform targetPoint;
-
-
-
+    public GameObject GameOver;
 
 
 
     void Start()
     {
-        targetPoint = pointA;
+/*        meshRenderer = GetComponent<MeshRenderer>();
+        var player = GameObject.FindGameObjectWithTag("Player");
+        var colorManager = player.GetComponent<ColorManager>();
+        var currentColor = colorManager.color[colorManager.CurrentColor];
+
+        meshRenderer.material.color = currentColor;*/
+        GameOver.SetActive(false);
+
+
     }
 
     void Update()
@@ -33,32 +42,30 @@ public class EmenyHandler : MonoBehaviour
         rotate = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, rotate, RotationSpeed);
 
-        transform.position = Vector3.MoveTowards(transform.position, targetPoint.position, walkspeed * Time.deltaTime);
 
-        // Check if we've reached the target point
-        if (Vector3.Distance(transform.position, targetPoint.position) < 0.01f)
-        {
+        transform.position = Vector3.MoveTowards(transform.position, TargetPlayer.position, walkspeed * Time.deltaTime);
 
-            // Switch to the other target point
-            if (targetPoint == pointA)
-            {
-                targetPoint = pointB;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }
-    } 
-    private void OnTriggerEnter(Collider other)
+
+    }
+
+
+    public void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("bullet"))
         {
+
             Debug.Log("Bullet hit enemy");
             Destroy(other.gameObject);
             Destroy(gameObject);
-
-
+            GameOver.SetActive(true);
         }
+
+
+
     }
+
+
+
+
+
 }

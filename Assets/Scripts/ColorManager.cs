@@ -19,7 +19,7 @@ public class ColorManager : MonoBehaviour
  //       meshRenderer = GetComponentInChildren<MeshRenderer>();
        meshRenderer = GetComponentInChildren<MeshRenderer>();
 
-        // Assign the color array to the static reference
+
         
     }
     public Material GetCurrentColorMaterial()

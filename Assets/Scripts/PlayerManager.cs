@@ -13,25 +13,21 @@ public class PlayerManager : MonoBehaviour
     private float BaseBulletFireRate;
 
     public Transform TargetPlayer;
-    public float RotationSpeed = .01f;
+    public float RotationSpeed = 0.9f;
     Quaternion rotate;
     Vector3 direction;
 
-
-
-
-    private Renderer rend;
-    public Color[] colors;
-    public Vector3 position;
-    float radius;
-
-
-
+    public float Range;
+    public GameObject GameOver;
+    public GameObject Player;
 
     void Start()
     {
         BaseBulletFireRate = BulletFireRate;
-        rend = GetComponent<Renderer>();
+        GameOver.SetActive(false);
+        Player.SetActive(true);
+
+
 
     }
 
@@ -43,22 +39,48 @@ public class PlayerManager : MonoBehaviour
 
         Quaternion targetRotation = Quaternion.LookRotation(EnemyDirection);
         Player.rotation = Quaternion.Slerp(Player.rotation, targetRotation, Time.deltaTime * RotationSpeed);
+
 */
-        direction = (TargetPlayer.position - transform.position).normalized;
-        rotate = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotate, RotationSpeed);
 
         BulletFireRate -= Time.deltaTime;
-        if (BulletFireRate <= 0)
+    if (BulletFireRate <= 0)
         {
             Shoot();
 
         }
-/*        if (Input.GetButtonDown("Fire1"))
-        {
-            Shoot();
-        }*/
+        /*        if (Input.GetButtonDown("Fire1"))
+                {
+                    Shoot();
+                }*/
+        RotateToNearestEnemy();
+
     }
+    private void RotateToNearestEnemy()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("enemy");
+        float closestDistance = Mathf.Infinity;
+        Transform nearestEnemy = null;
+
+        foreach (var enemy in enemies)
+        {
+            float dist = Vector3.Distance(transform.position, enemy.transform.position);
+
+            if (dist <= Range && dist < closestDistance)
+            {
+                closestDistance = dist;
+                nearestEnemy = enemy.transform;
+            }
+        }
+
+        if (nearestEnemy != null)
+        {
+            direction = (nearestEnemy.position - transform.position).normalized;
+            rotate = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotate, RotationSpeed * Time.deltaTime);
+        }
+    }
+
+
 
     void Shoot()
     {
@@ -69,14 +91,28 @@ public class PlayerManager : MonoBehaviour
         BulletFireRate = BaseBulletFireRate;
     }
 
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("enemy"))
+        {
+            GameOver.SetActive(true);
+            Player.SetActive(false);
+            Debug.Log("enemy reached player");
+        }
+
+
+    }
     private void OnDrawGizmos()
     {
-       // Gizmos.color = Color.green;
-       // Gizmos.DrawWireSphere(transform.position, radius);
+       Gizmos.color = Color.green;
+       Gizmos.DrawWireSphere(transform.position, Range);
     }
 
-    private void OnMouseDown()
+
+
+/*    private void OnMouseDown()
     {
         rend.material.color = colors[Random.Range(0,colors.Length)];
-    }
+    }*/
 }
